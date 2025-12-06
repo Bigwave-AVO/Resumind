@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumind - Get Tailored Applications in Seconds</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            padding: 20px;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        .logo-space {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            border: 2px dashed #8d8d8c91;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8d8d8c91;
+            font-size: 0.9em;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8d8d8c91 0%, #8d8d8c91 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            color: #b0b0b0;
+        }
+
+        .card {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.1);
+            margin-bottom: 20px;
+            border: 2px solid #8d8d8c91;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #8d8d8c91;
+            font-size: 0.95em;
+        }
+
+        .input-group textarea,
+        .input-group input[type="email"],
+        .input-group input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            background: #0f0f0f;
+            border: 2px solid #8d8d8c91;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-family: inherit;
+            color: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+        }
+
+        .input-group textarea:focus,
+        .input-group input:focus {
+            outline: none;
+            border-color: #8d8d8c91;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .input-group input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #1a1a1a;
+            border: 2px dashed #8d8d8c91;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95em;
+            color: #8d8d8c91;
+        }
+
+        .file-upload-btn:hover {
+            background: #252525;
+            border-color: #8d8d8c91;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .file-name {
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #8d8d8c91;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #8d8d8c91 0%, #8d8d8c91 100%);
+            color: #0a0a0a;
+            border: 2px solid #8d8d8c91;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+            border-color: #8d8d8c91;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: #3a3a3a;
+            cursor: not-allowed;
+            transform: none;
+            border-color: #2a2a2a;
+            opacity: 0.5;
+            color: #808080;
+        }
+
+        .btn.small {
+            padding: 12px 30px;
+            font-size: 1em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+
+        .spinner {
+            border: 3px solid #2a2a2a;
+            border-top: 3px solid #8d8d8c91;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+        }
+
+        .result-section {
+            margin-bottom: 30px;
+        }
+
+        .result-section h3 {
+            font-size: 1.3em;
+            margin-bottom: 12px;
+            color: #8d8d8c91;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .copy-btn {
+            padding: 6px 16px;
+            background: #2a2a2a;
+            color: #8d8d8c91;
+            border: 1px solid #8d8d8c91;
+            border-radius: 6px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #3a3a3a;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            border-color: #8d8d8c91;
+        }
+
+        .result-content {
+            background: #0f0f0f;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #8d8d8c91;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-size: 0.95em;
+            color: #d0d0d0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #8d8d8c91;
+            transition: all 0.3s;
+        }
+
+        .stat-box:hover {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            border-color: #8d8d8c91;
+            transform: translateY(-5px);
+        }
+
+        .stat-box .number {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #8d8d8c91;
+        }
+
+        .stat-box .label {
+            font-size: 0.85em;
+            color: #909090;
+        }
+
+        .error-message {
+            background: #2a1a1a;
+            color: #ff6b6b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #ff4444;
+        }
+
+        .success-message {
+            background: #1a2a1a;
+            color: #6bff6b;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .card {
+                padding: 25px;
+            }
+            .logo-space {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+                <img src="Assets/Resumind logo .PNG" width="150"alt=" ResuMind logo" class="logo">
+            
+            <h1>Resumind</h1>
+            <p>Tailored resumes and cover letters in 30 seconds</p>
+        </div>
+
+        <!-- Main App -->
+        <div class="card" id="mainApp">
+            <div class="error-message" id="errorMessage"></div>
+
+            <div>
+                <div class="input-group">
+                    <label for="jobDescription">Job Description *</label>
+                    <textarea 
+                        id="jobDescription" 
+                        rows="6" 
+                        placeholder="Paste the full job description here..."
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="currentResume">Your Current Resume *</label>
+                    <textarea 
+                        id="currentResume" 
+                        rows="8" 
+                        placeholder="Paste your current resume text here (or upload below)..."
+                    ></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>Or Upload Resume (PDF/TXT)</label>
+                    <label for="resumeFile" class="file-upload-btn">
+                        Choose File
+                    </label>
+                    <input type="file" id="resumeFile" accept=".pdf,.txt">
+                    <div class="file-name" id="fileName"></div>
+                </div>
+
+                <div class="input-group">
+                    <label for="additionalInfo">Additional Context (Optional)</label>
+                    <textarea 
+                        id="additionalInfo" 
+                        rows="3" 
+                        placeholder="Any specific achievements or skills you want to highlight for this role..."
+                    ></textarea>
+                </div>
+
+                <button class="btn" id="generateBtn" onclick="handleGenerate()">
+                    Generate Tailored Application
+                </button>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Crafting your perfect application...</p>
+            </div>
+
+            <div class="results" id="results">
+                <div class="result-section">
+                    <h3>
+                        Tailored Resume
+                        <button class="copy-btn" onclick="copyToClipboard('resume')">Copy</button>
+                    </h3>
+                    <div class="result-content" id="resumeResult"></div>
+                    <div class="success-message" id="resumeCopied">Copied to clipboard!</div>
+                </div>
+
+                <div class="result-section">
+                    <h3>
+                        Cover Letter
+                        <button class="copy-btn" onclick="copyToClipboard('coverLetter')">Copy</button>
+                    </h3>
+                    <div class="result-content" id="coverLetterResult"></div>
+                    <div class="success-message" id="coverLetterCopied">Copied to clipboard!</div>
+                </div>
+
+                <div class="result-section">
+                    <h3>Key Match Points</h3>
+                    <div class="result-content" id="matchPoints"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="text-align: center; padding: 20px;">
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="number">30s</div>
+                    <div class="label">Average Time</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">3.2x</div>
+                    <div class="label">More Interviews</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">89%</div>
+                    <div class="label">Success Rate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (v12 Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAzaNaRX2vv8M96d3cm8ijso62bU3vdM3c",
+            authDomain: "gen-lang-client-0844621339.firebaseapp.com",
+            projectId: "gen-lang-client-0844621339",
+            storageBucket: "gen-lang-client-0844621339.firebasestorage.app",
+            messagingSenderId: "557424512881",
+            appId: "1:557424512881:web:636c204bd5e6bd44c0b0d0",
+            measurementId: "G-BGN66V5FQD"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+
+    <script>
+        // File upload handler
+        document.getElementById('resumeFile').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('fileName').textContent = `Selected: ${file.name}`;
+                
+                if (file.type === 'text/plain') {
+                    const text = await file.text();
+                    document.getElementById('currentResume').value = text;
+                } else if (file.type === 'application/pdf') {
+                    document.getElementById('fileName').textContent += ' (PDF detected - please paste text manually for now)';
+                }
+            }
+        });
+
+        // Handle generate button
+        async function handleGenerate() {
+            const jobDescription = document.getElementById('jobDescription').value.trim();
+            const currentResume = document.getElementById('currentResume').value.trim();
+            const additionalInfo = document.getElementById('additionalInfo').value.trim();
+
+            if (!jobDescription || !currentResume) {
+                showError('Please provide both job description and your current resume');
+                return;
+            }
+
+            // Show loading state
+            document.getElementById('generateBtn').disabled = true;
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+
+            try {
+                // Call our backend API
+                const response = await fetch('/api/generate', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        jobDescription,
+                        currentResume,
+                        additionalInfo
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate application materials');
+                }
+
+                const data = await response.json();
+                const fullText = data.text;
+                
+                // Parse the response
+                const resumeMatch = fullText.match(/RESUME:\s*([\s\S]*?)(?=COVER LETTER:|$)/);
+                const coverLetterMatch = fullText.match(/COVER LETTER:\s*([\s\S]*?)(?=MATCH POINTS:|$)/);
+                const matchPointsMatch = fullText.match(/MATCH POINTS:\s*([\s\S]*?)$/);
+                
+                const resume = resumeMatch ? resumeMatch[1].trim() : 'Error generating resume';
+                const coverLetter = coverLetterMatch ? coverLetterMatch[1].trim() : 'Error generating cover letter';
+                const matchPoints = matchPointsMatch ? matchPointsMatch[1].trim() : 'Error generating match points';
+                
+                // Display results
+                document.getElementById('resumeResult').textContent = resume;
+                document.getElementById('coverLetterResult').textContent = coverLetter;
+                document.getElementById('matchPoints').textContent = matchPoints;
+
+                document.getElementById('results').style.display = 'block';
+                
+                // Scroll to results
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                document.getElementById('generateBtn').disabled = false;
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            errorDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(section) {
+            let text = '';
+            let messageId = '';
+
+            if (section === 'resume') {
+                text = document.getElementById('resumeResult').textContent;
+                messageId = 'resumeCopied';
+            } else if (section === 'coverLetter') {
+                text = document.getElementById('coverLetterResult').textContent;
+                messageId = 'coverLetterCopied';
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                const msg = document.getElementById(messageId);
+                msg.style.display = 'block';
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
